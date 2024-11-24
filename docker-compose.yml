@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  php-docker-app:
+    build: .
+    container_name: php-docker-app
+    ports:
+      - "8101:8101" # Expose port 8101 from the container to 8101 on the host
+    volumes:
+      - ./api:/var/www/html # Map the `api` directory to `/var/www/html` inside the container for live updates
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0-oracle # Use the Oracle variant for ARM64 compatibility
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: testdb
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+
+networks:
+  app-network:
